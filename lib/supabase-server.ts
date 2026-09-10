@@ -16,5 +16,8 @@ export const supabaseServer = createClient(
       persistSession: false,
       autoRefreshToken: false,
     },
+    realtime: {
+      transport: class DummyTransport {} as any,
+    },
   }
 );
