@@ -1,0 +1,35 @@
+{
+  "name": "ai-portfolio-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "index-knowledge": "tsx scripts/index-knowledge.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^4.0.64",
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.116.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "ai": "^7.0.93",
+    "autoprefixer": "^10.5.5",
+    "dotenv": "^16.4.7",
+    "next": "^16.3.4",
+    "pg": "^8.13.3",
+    "postcss": "^8.5.28",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.13.5",
+    "@types/pg": "^8.11.11",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
