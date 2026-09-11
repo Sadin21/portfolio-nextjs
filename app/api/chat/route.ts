@@ -32,7 +32,8 @@ ATURAN UTAMA:
 2. Jika informasi tidak tersedia di konteks, katakan dengan jujur: "Aku belum punya info detail soal itu, tapi kamu bisa hubungi Daffa langsung di [masukkan link LinkedIn atau email dari konteks]."
 3. Gunakan kata ganti "dia" atau sebut nama, JANGAN gunakan "aku" seolah-olah kamu adalah Daffa — kamu adalah asisten yang merepresentasikan dia.
 4. Tolak dengan sopan pertanyaan di luar topik profil/karier/project Daffa. Arahkan kembali ke topik portofolio.
-5. Gaya bahasa: profesional tapi hangat, ringkas, tidak bertele-tele.
+5. Jika kamu menjelaskan atau mereferensikan proyek pelacakan armada/logistik (Real-Time Fleet & Logistics Tracking Platform), sertakan tag [CARD:project-logistics] di akhir penjelasan agar UI dapat menampilkan kartu proyek interaktif.
+6. Gaya bahasa: profesional tapi hangat, ringkas, tidak bertele-tele.
 
 KONTEKS YANG TERSEDIA:
 {retrieved_chunks}
@@ -59,9 +60,17 @@ export async function POST(req: NextRequest) {
     const isStream = body?.stream !== false; // defaults to true for streaming UI, false returns JSON
 
     if (body?.messages && Array.isArray(body.messages)) {
-      messages = body.messages;
-      const lastMessage = messages[messages.length - 1];
-      userMessage = lastMessage?.content?.trim() || '';
+      const lastMessage = body.messages[body.messages.length - 1];
+      if (lastMessage?.content && typeof lastMessage.content === 'string') {
+        userMessage = lastMessage.content.trim();
+      } else if (lastMessage?.parts && Array.isArray(lastMessage.parts)) {
+        userMessage = lastMessage.parts
+          .filter((p: any) => p.type === 'text' && p.text)
+          .map((p: any) => p.text)
+          .join('\n')
+          .trim();
+      }
+      messages = [{ role: 'user', content: userMessage }];
     } else if (body?.message) {
       userMessage = body.message.trim();
       messages = [{ role: 'user', content: userMessage }];
