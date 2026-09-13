@@ -93,13 +93,99 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. IP Rate Limiting
-    const { data: isAllowed, error: rateLimitError } = await supabaseServer.rpc('check_rate_limit', {
+    // 2. Concurrent Pre-LLM Operations (Parallel I/O via Promise.all)
+    const startTime = performance.now();
+
+    // Task A: Rate Limiting
+    const rateLimitPromise = supabaseServer.rpc('check_rate_limit', {
       client_ip: ip,
       max_requests: 15,
       window_minutes: 10,
     });
 
+    // Task B: Semantic Retrieval (Embedding + pgvector Search)
+    const ragPromise = (async () => {
+      try {
+        const embedding = await generateQueryEmbedding(userMessage);
+        const vectorString = `[${embedding.join(',')}]`;
+
+        const { data: chunks, error: matchError } = await supabaseServer.rpc('match_knowledge_chunks', {
+          query_embedding: vectorString,
+          match_threshold: 0.55, // Calibrated for gemini-embedding-001 similarity distribution
+          match_count: 5,
+        });
+
+        if (matchError) {
+          console.error('Match chunks error:', matchError);
+          return { contextText: '', retrievedChunkIds: [] as string[] };
+        }
+
+        if (chunks && chunks.length > 0) {
+          return {
+            retrievedChunkIds: chunks.map((c: any) => c.id as string),
+            contextText: chunks.map((c: any) => `--- SECTION: ${c.section_title} ---\n${c.content}`).join('\n\n'),
+          };
+        }
+      } catch (e) {
+        console.error('Embedding/Retrieval error:', e);
+      }
+      return { contextText: '', retrievedChunkIds: [] as string[] };
+    })();
+
+    // Task C: Session & Chat History Management
+    const sessionPromise = (async () => {
+      let sessionId: string | null = null;
+      let historyMessages: ChatMessage[] = [];
+
+      try {
+        const { data: existingSession } = await supabaseServer
+          .from('chat_sessions')
+          .select('id')
+          .eq('session_token', sessionToken)
+          .single();
+
+        if (existingSession) {
+          sessionId = existingSession.id;
+        } else {
+          const { data: newSession } = await supabaseServer
+            .from('chat_sessions')
+            .insert({ session_token: sessionToken })
+            .select('id')
+            .single();
+          sessionId = newSession?.id || null;
+        }
+
+        if (sessionId) {
+          const { data: historyData } = await supabaseServer
+            .from('chat_messages')
+            .select('role, content')
+            .eq('session_id', sessionId)
+            .order('created_at', { ascending: false })
+            .limit(6); // last 3 turns
+
+          if (historyData) {
+            historyMessages = historyData.reverse().map((msg: any) => ({
+              role: msg.role as 'user' | 'assistant',
+              content: msg.content,
+            }));
+          }
+        }
+      } catch (e) {
+        console.error('Session/History lookup error:', e);
+      }
+
+      return { sessionId, historyMessages };
+    })();
+
+    // Await all concurrent tasks simultaneously
+    const [rateLimitResult, { contextText, retrievedChunkIds }, { sessionId, historyMessages }] =
+      await Promise.all([rateLimitPromise, ragPromise, sessionPromise]);
+
+    const preLlmDuration = (performance.now() - startTime).toFixed(1);
+    console.log(`[API Latency] Pre-LLM concurrent operations completed in: ${preLlmDuration}ms`);
+
+    // Verify Rate Limit Result
+    const { data: isAllowed, error: rateLimitError } = rateLimitResult;
     if (rateLimitError) {
       console.error('Rate limit error:', rateLimitError);
       return createErrorResponse('Terjadi gangguan saat memverifikasi kuota request.', 'RATE_LIMIT_CHECK_FAILED', 500);
@@ -111,70 +197,6 @@ export async function POST(req: NextRequest) {
         'RATE_LIMIT_EXCEEDED',
         429
       );
-    }
-
-    // 3. Semantic Retrieval (RAG)
-    let contextText = '';
-    let retrievedChunkIds: string[] = [];
-
-    try {
-      const embedding = await generateQueryEmbedding(userMessage);
-      const vectorString = `[${embedding.join(',')}]`;
-
-      const { data: chunks, error: matchError } = await supabaseServer.rpc('match_knowledge_chunks', {
-        query_embedding: vectorString,
-        match_threshold: 0.55, // Calibrated for gemini-embedding-001 similarity distribution
-        match_count: 5,
-      });
-
-      if (matchError) {
-        console.error('Match chunks error:', matchError);
-      } else if (chunks && chunks.length > 0) {
-        retrievedChunkIds = chunks.map((c: any) => c.id);
-        contextText = chunks.map((c: any) => `--- SECTION: ${c.section_title} ---\n${c.content}`).join('\n\n');
-      }
-    } catch (e) {
-      console.error('Embedding/Retrieval error:', e);
-      // We continue without context so the fallback kicks in
-    }
-
-    // 4. Session & History Management
-    // Find or create session
-    let sessionId = null;
-    const { data: existingSession } = await supabaseServer
-      .from('chat_sessions')
-      .select('id')
-      .eq('session_token', sessionToken)
-      .single();
-
-    if (existingSession) {
-      sessionId = existingSession.id;
-    } else {
-      const { data: newSession } = await supabaseServer
-        .from('chat_sessions')
-        .insert({ session_token: sessionToken })
-        .select('id')
-        .single();
-      sessionId = newSession?.id;
-    }
-
-    // Fetch chat history from DB
-    let historyMessages: ChatMessage[] = [];
-    if (sessionId) {
-      const { data: historyData } = await supabaseServer
-        .from('chat_messages')
-        .select('role, content')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: false })
-        .limit(6); // last 3 turns
-      
-      if (historyData) {
-        // Reverse to get chronological order
-        historyMessages = historyData.reverse().map((msg: any) => ({
-          role: msg.role as 'user' | 'assistant',
-          content: msg.content
-        }));
-      }
     }
 
     // 5. System Prompt Assembly
@@ -256,6 +278,7 @@ export async function POST(req: NextRequest) {
       headers: {
         'X-Session-Token': sessionToken,
         'X-Retrieved-Chunks-Count': retrievedChunkIds.length.toString(),
+        'Server-Timing': `pre_llm;dur=${preLlmDuration}`,
         'Cache-Control': 'no-cache, no-transform',
       },
     });
