@@ -10,6 +10,7 @@ import { SuggestedPrompts } from './SuggestedPrompts';
 export const ChatContainer: React.FC = () => {
   const [input, setInput] = useState('');
   const [sessionToken, setSessionToken] = useState<string>('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize or retrieve persistent sessionToken on client
@@ -64,94 +65,127 @@ export const ChatContainer: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-4xl mx-auto">
-      {/* Top Navigation / Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl z-20">
+    <div className="flex flex-col h-[100dvh] max-w-5xl mx-auto border-x border-[#222d34]/60 bg-[#0b141a]/95 backdrop-blur-xs relative">
+      {/* WhatsApp Web Top Header */}
+      <header className="shrink-0 flex items-center justify-between px-4 py-2.5 bg-[#202c33] border-b border-[#222d34] z-20">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 font-bold text-white text-sm shadow-md shadow-cyan-950/50">
+          {/* Avatar */}
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#00a884] text-white font-bold text-sm shadow-xs">
             DA
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-slate-950" />
-            </span>
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-[#25d366] border-2 border-[#202c33]" />
           </div>
+
+          {/* Contact Information */}
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                Muhammad Daffa Asaddin
-              </h1>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-                AI Portfolio Agent
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              Fullstack Software Engineer (2 YOE • Digital Logistics & RAG)
+            <h1 className="text-sm font-semibold text-[#e9edef] leading-tight">
+              Muhammad Daffa Asaddin
+            </h1>
+            <p className="text-[11px] text-[#8696a0] flex items-center gap-1.5">
+              <span className="text-[#25d366]">online</span>
+              <span>•</span>
+              <span>Fullstack Engineer (2 YOE)</span>
             </p>
           </div>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2">
-          {messages.length > 0 && (
-            <button
-              onClick={handleReset}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700/80 bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 hover:text-white text-xs font-medium transition-colors"
-              title="Mulai percakapan baru"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span className="hidden sm:inline">Reset Chat</span>
-            </button>
-          )}
+        {/* Right Header Action Controls */}
+        <div className="flex items-center gap-3 text-[#aebac1]">
+          {/* New Chat / Reset */}
+          <button
+            onClick={handleReset}
+            className="p-2 rounded-full hover:bg-[#374248] hover:text-[#e9edef] transition-colors"
+            title="Reset Chat / New Chat"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
 
-          {/* Social Links Quick Access */}
-          <a
-            href="https://www.linkedin.com/in/muhammad-daffa-asaddin/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-lg border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-slate-700 transition-colors"
-            title="Profil LinkedIn"
-          >
-            <svg className="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-            </svg>
-          </a>
-          <a
-            href="https://github.com/Sadin21"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-lg border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
-            title="Profil GitHub"
-          >
-            <svg className="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
-              <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-            </svg>
-          </a>
+          {/* External Social / Menu Toggle */}
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-full hover:bg-[#374248] hover:text-[#e9edef] transition-colors"
+              title="Menu & Kontak"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z" />
+              </svg>
+            </button>
+
+            {/* Menu Popover */}
+            {menuOpen && (
+              <div className="absolute right-0 top-11 w-60 rounded-xl border border-[#222d34] bg-[#233138] p-3 shadow-2xl z-50 animate-fadeIn text-[#e9edef] text-xs">
+                <div className="pb-2 mb-2 border-b border-[#374248]">
+                  <p className="font-semibold text-sm text-[#e9edef]">Daffa Asaddin</p>
+                  <p className="text-[11px] text-[#8696a0]">Fullstack Engineer (Digital Logistics)</p>
+                </div>
+
+                <div className="space-y-1">
+                  <a
+                    href="https://www.linkedin.com/in/muhammad-daffa-asaddin/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#182229] hover:text-[#00a884] transition-colors"
+                  >
+                    <span>💼</span> LinkedIn Profile
+                  </a>
+                  <a
+                    href="https://github.com/Sadin21"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#182229] hover:text-[#00a884] transition-colors"
+                  >
+                    <span>🐙</span> GitHub Repositories
+                  </a>
+                  <a
+                    href="mailto:emdeasaddin21@gmail.com"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#182229] hover:text-[#00a884] transition-colors"
+                  >
+                    <span>✉️</span> emdeasaddin21@gmail.com
+                  </a>
+                </div>
+
+                <div className="pt-2 mt-2 border-t border-[#374248] text-[10px] text-[#8696a0]">
+                  Grounded with Supabase pgvector RAG
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      {/* Messages Scroll Area */}
-      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
+      {/* Main Chat Scroll Area */}
+      <main className="flex-1 overflow-y-auto px-3 sm:px-8 py-3 flex flex-col space-y-3">
+        {/* WhatsApp Date Header Pill */}
+        <div className="my-1.5 mx-auto">
+          <span className="px-3 py-1 rounded-md bg-[#182229] text-[#8696a0] text-[11px] font-medium tracking-wide uppercase shadow-xs">
+            Today
+          </span>
+        </div>
+
+        {/* WhatsApp Security Notice Box */}
+        <div className="mx-auto max-w-lg p-2.5 rounded-lg bg-[#182229]/90 text-[#ffd279] text-xs text-center border border-[#222d34]/60 shadow-xs flex items-center justify-center gap-2">
+          <span>🔒</span>
+          <span className="text-[11px] leading-tight text-[#ffd279]">
+            Pesan dalam obrolan ini dijawab oleh AI Assistant berdasarkan dokumen portofolio terverifikasi Daffa Asaddin.
+          </span>
+        </div>
+
+        {/* Welcome Starter / Messages Feed */}
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 animate-fadeIn">
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              Sistem RAG Portofolio Siap
+          <div className="my-auto w-full max-w-xl mx-auto">
+            {/* System Introduction Bubble */}
+            <div className="rounded-lg bg-[#202c33] border border-[#222d34] p-4 text-[#e9edef] text-xs sm:text-sm shadow-xs mb-4">
+              <p className="font-semibold text-sm text-[#00a884] mb-1">
+                Halo! Saya AI Assistant Muhammad Daffa Asaddin.
+              </p>
+              <p className="text-[#8696a0] text-xs leading-relaxed">
+                Daffa adalah Fullstack Software Engineer dengan 2 tahun pengalaman di sektor digital logistik (ERP, Tracking Armada, & Direct Payment SNAP BI). Silakan pilih topik di bawah atau ketik pertanyaan langsung di kolom pesan:
+              </p>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight max-w-lg leading-snug">
-              Ada yang ingin kamu ketahui tentang{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                Muhammad Daffa Asaddin?
-              </span>
-            </h2>
-
-            <p className="mt-2 text-xs sm:text-sm text-slate-400 max-w-md">
-              Tanyakan pengalaman kerja di logistik digital, arsitektur pelacakan armada, stack React & Node.js, atau cara menghubunginya.
-            </p>
-
-            {/* Starter Prompts */}
+            {/* Suggested Starter Topics */}
             <SuggestedPrompts
               onSelectPrompt={handleSend}
               disabled={isStreaming}
@@ -159,7 +193,6 @@ export const ChatContainer: React.FC = () => {
           </div>
         ) : (
           messages.map((message, idx) => {
-            // Extract text from parts or text property
             let contentText = '';
             if (message.parts && Array.isArray(message.parts)) {
               contentText = message.parts
@@ -184,31 +217,23 @@ export const ChatContainer: React.FC = () => {
           })
         )}
 
-        {/* Loading placeholder when submitted but no tokens yet */}
+        {/* WhatsApp Typing / Generating Indicator */}
         {status === 'submitted' && (
-          <div className="flex items-center gap-3 py-2 text-slate-400 text-xs sm:text-sm animate-pulse">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-bold text-xs">
-              DA
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              <span>Mencari rujukan di knowledge base portofolio...</span>
-            </div>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#202c33] text-[#8696a0] text-xs w-fit max-w-[200px] border border-[#222d34]">
+            <span className="w-2 h-2 rounded-full bg-[#00a884] animate-ping" />
+            <span>mengetik...</span>
           </div>
         )}
 
-        {/* Error Notification Banner */}
+        {/* Error Notification */}
         {error && (
-          <div className="my-3 p-3.5 rounded-xl border border-red-500/40 bg-red-950/30 text-red-300 text-xs sm:text-sm flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-base">⚠️</span>
-              <span>{error.message || 'Terjadi kesalahan saat menghubungkan ke server AI.'}</span>
-            </div>
+          <div className="my-2 p-3 rounded-lg bg-[#382023] border border-[#4a262a] text-[#f15c6d] text-xs flex items-center justify-between gap-3">
+            <span>⚠️ {error.message || 'Gagal menghubungi server AI.'}</span>
             <button
               onClick={() => handleSend(input || 'Halo')}
-              className="px-2.5 py-1 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-200 text-xs font-semibold transition-colors"
+              className="px-2.5 py-1 rounded bg-[#4a262a] hover:bg-[#5e3136] text-white text-xs font-medium transition-colors"
             >
-              Coba Lagi
+              Coba lagi
             </button>
           </div>
         )}
@@ -216,8 +241,8 @@ export const ChatContainer: React.FC = () => {
         <div ref={messagesEndRef} />
       </main>
 
-      {/* Input Form Bar */}
-      <footer className="shrink-0 z-10">
+      {/* WhatsApp Web Bottom Input Bar */}
+      <footer className="shrink-0 z-10 bg-[#202c33] border-t border-[#222d34] px-4 py-2.5">
         <ChatInput
           input={input}
           setInput={setInput}

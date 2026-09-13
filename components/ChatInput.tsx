@@ -9,8 +9,6 @@ interface ChatInputProps {
   disabled?: boolean;
 }
 
-const MAX_CHARS = 800;
-
 export const ChatInput: React.FC<ChatInputProps> = ({
   input,
   setInput,
@@ -29,87 +27,100 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     onSubmit(trimmed);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !isComposing) {
       e.preventDefault();
       handleSubmit(e);
     }
   };
 
-  const remainingChars = MAX_CHARS - input.length;
-  const isTooLong = remainingChars < 0;
-
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 pb-4">
-      <form
-        onSubmit={handleSubmit}
-        className="relative rounded-2xl border border-slate-700/70 bg-slate-900/80 shadow-2xl backdrop-blur-xl focus-within:border-cyan-500/60 focus-within:ring-1 focus-within:ring-cyan-500/30 transition-all"
-      >
-        <textarea
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 max-w-5xl mx-auto w-full">
+      {/* Left WhatsApp Icons: Paperclip & Emoji */}
+      <div className="flex items-center gap-1 text-[#8696a0] shrink-0">
+        {/* Paperclip */}
+        <button
+          type="button"
+          className="p-2 rounded-full hover:text-[#e9edef] hover:bg-[#374248] transition-colors"
+          title="Attach"
+          onClick={() => setInput(input + '📎 ')}
+        >
+          <svg className="w-5 h-5 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+          </svg>
+        </button>
+
+        {/* Emoji Smiley */}
+        <button
+          type="button"
+          className="p-2 rounded-full hover:text-[#e9edef] hover:bg-[#374248] transition-colors"
+          title="Emoji"
+          onClick={() => setInput(input + '✅ ')}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      </div>
+
+      {/* WhatsApp Message Input Field */}
+      <div className="flex-1 relative flex items-center">
+        <input
+          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
           disabled={disabled}
-          placeholder="Tanyakan apa saja seputar pengalaman, proyek, atau keahlian Daffa..."
-          rows={2}
-          className="w-full resize-none bg-transparent px-4 pt-3.5 pb-12 text-sm text-slate-100 placeholder-slate-500 focus:outline-none disabled:opacity-50"
+          placeholder="Type a message"
+          className="w-full rounded-lg bg-[#2a3942] px-4 py-2.5 text-sm text-[#e9edef] placeholder-[#8696a0] focus:outline-none focus:ring-1 focus:ring-[#00a884] transition-all disabled:opacity-50"
         />
+      </div>
 
-        {/* Action bar inside input */}
-        <div className="absolute bottom-2.5 left-4 right-3 flex items-center justify-between pointer-events-none">
-          {/* Character counter */}
-          <span
-            className={`text-[10px] font-mono transition-colors pointer-events-auto ${
-              isTooLong ? 'text-red-400 font-bold' : remainingChars <= 100 ? 'text-amber-400' : 'text-slate-500'
-            }`}
+      {/* Right WhatsApp Action Button (Mic / Send / Stop) */}
+      <div className="shrink-0 flex items-center">
+        {isStreaming ? (
+          <button
+            type="button"
+            onClick={onStop}
+            className="p-2 rounded-full text-[#f15c6d] hover:bg-[#374248] transition-colors"
+            title="Stop response"
           >
-            {input.length}/{MAX_CHARS}
-          </span>
-
-          {/* Buttons */}
-          <div className="flex items-center gap-2 pointer-events-auto">
-            {isStreaming ? (
-              <button
-                type="button"
-                onClick={onStop}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-red-500/40 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold tracking-wide transition-all active:scale-95 shadow-sm"
-              >
-                <span className="w-2 h-2 rounded-sm bg-red-400 animate-pulse" />
-                Hentikan
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={disabled || !input.trim() || isTooLong}
-                className="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-30 disabled:hover:from-cyan-500 disabled:hover:to-blue-600 disabled:cursor-not-allowed transition-all active:scale-95"
-                aria-label="Kirim Pertanyaan"
-              >
-                <svg
-                  className="w-4 h-4 translate-x-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.2}
-                    d="M5 12h14M12 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-      </form>
-
-      {/* Privacy & verification notice */}
-      <p className="text-center text-[11px] text-slate-500 mt-2.5 flex items-center justify-center gap-1.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400/80" />
-        AI Portfolio Assistant dapat membuat kekeliruan. Seluruh jawaban dirujuk dari basis pengetahuan profil terverifikasi.
-      </p>
-    </div>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <rect x="6" y="6" width="12" height="12" rx="2" />
+            </svg>
+          </button>
+        ) : input.trim().length > 0 ? (
+          <button
+            type="submit"
+            disabled={disabled}
+            className="p-2 rounded-full text-[#00a884] hover:text-[#25d366] hover:bg-[#374248] transition-colors"
+            title="Send message"
+            aria-label="Send"
+          >
+            <svg className="w-5 h-5 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="p-2 rounded-full text-[#8696a0] hover:text-[#e9edef] hover:bg-[#374248] transition-colors"
+            title="Voice message"
+            onClick={() => setInput('Ceritakan pengalaman kerja Daffa di logistik')}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.75}
+                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
+    </form>
   );
 };

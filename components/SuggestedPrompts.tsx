@@ -7,28 +7,28 @@ interface SuggestedPromptsProps {
 
 const STARTER_PROMPTS = [
   {
-    icon: '💼',
-    title: 'Pengalaman & Latar Belakang',
-    description: 'Ceritakan perjalanan karier dan peran Daffa di digital logistik.',
+    prefix: '1.',
+    title: 'Pengalaman & Riwayat Karier',
+    description: '2 tahun sebagai Fullstack Engineer di perusahaan digital logistik.',
     query: 'Ceritakan latar belakang karier dan pengalaman profesional Daffa.',
   },
   {
-    icon: '🚚',
-    title: 'Project Real-Time Tracking',
-    description: 'Bagaimana arsitektur platform pelacakan armada truk yang dibangun?',
-    query: 'Jelaskan proyek Real-Time Fleet & Logistics Tracking Platform yang dikerjakan Daffa beserta hasilnya.',
+    prefix: '2.',
+    title: 'Studi Kasus: Payment SNAP BI',
+    description: 'Integrasi direct Virtual Account 5 bank utama (BCA, BNI, BRI, Mandiri, DBS).',
+    query: 'Jelaskan proyek integrasi Virtual Account multi-bank berbasis SNAP BI yang dikerjakan Daffa.',
   },
   {
-    icon: '⚡',
-    title: 'Tech Stack & Keahlian',
-    description: 'Teknologi apa saja yang dikuasai untuk frontend, backend, dan AI?',
+    prefix: '3.',
+    title: 'Studi Kasus: Monitoring Utility Matrix',
+    description: 'Spreadsheet kalender matriks 31 hari armada & driver terintegrasi ERP.',
+    query: 'Bagaimana Daffa membangun fitur Monitoring Utility Armada & Driver serta tantangan teknisnya?',
+  },
+  {
+    prefix: '4.',
+    title: 'Keahlian Teknis (Tech Stack)',
+    description: 'Next.js App Router, Supabase pgvector, Laravel, Docker, & Gemini RAG.',
     query: 'Apa saja keahlian teknis (tech stack) utama yang dikuasai Daffa?',
-  },
-  {
-    icon: '📬',
-    title: 'Kontak & Kolaborasi',
-    description: 'Bagaimana cara menghubungi Daffa untuk diskusi atau interview?',
-    query: 'Bagaimana cara menghubungi Daffa untuk tawaran kerja atau diskusi kolaborasi?',
   },
 ];
 
@@ -37,34 +37,31 @@ export const SuggestedPrompts: React.FC<SuggestedPromptsProps> = ({
   disabled = false,
 }) => {
   return (
-    <div className="w-full max-w-2xl mx-auto my-6 px-2 animate-fadeIn">
-      <div className="text-center mb-5">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-1">
-          Topik Pertanyaan yang Disarankan
-        </h3>
-        <p className="text-xs text-slate-500">
-          Klik salah satu kartu di bawah untuk memulai percakapan secara instan:
-        </p>
+    <div className="w-full space-y-2">
+      <div className="text-[11px] font-semibold text-[#8696a0] uppercase tracking-wider px-1">
+        Pilihan Topik Tanya Jawab:
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {STARTER_PROMPTS.map((item, index) => (
           <button
             key={index}
             type="button"
             disabled={disabled}
             onClick={() => onSelectPrompt(item.query)}
-            className="group flex flex-col text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 hover:border-cyan-500/40 transition-all duration-200 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-cyan-950/20"
+            className="group flex items-start gap-2.5 text-left p-3 rounded-lg border border-[#2a3942] bg-[#202c33] hover:bg-[#2a3942] hover:border-[#00a884]/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
           >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">{item.icon}</span>
-              <span className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-cyan-300 transition-colors">
+            <span className="text-[#00a884] font-mono text-xs font-bold shrink-0 mt-0.5">
+              {item.prefix}
+            </span>
+            <div className="min-w-0">
+              <div className="text-xs font-semibold text-[#e9edef] group-hover:text-[#00a884] transition-colors">
                 {item.title}
-              </span>
+              </div>
+              <p className="text-[11px] text-[#8696a0] line-clamp-1 mt-0.5">
+                {item.description}
+              </p>
             </div>
-            <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
-              {item.description}
-            </p>
           </button>
         ))}
       </div>

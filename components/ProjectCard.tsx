@@ -3,27 +3,71 @@ import React from 'react';
 interface ProjectMetadata {
   title: string;
   category: string;
+  badge: string;
+  callout: string;
   problem: string;
   stack: string[];
   metrics: { label: string; value: string }[];
-  linkText?: string;
-  linkUrl?: string;
+  primaryBtnText: string;
+  primaryBtnUrl: string;
+  secondaryBtnText?: string;
+  secondaryBtnUrl?: string;
 }
 
 const PROJECT_REGISTRY: Record<string, ProjectMetadata> = {
   'project-logistics': {
     title: 'Real-Time Fleet & Logistics Tracking Platform',
-    category: 'Digital Logistics & Fleet Visibility',
+    category: 'FLEET VISIBILITY • IOT TELEMETRY',
+    badge: 'Production',
+    callout: 'Memangkas latensi pelaporan armada dari 30 menit menjadi < 3 detik.',
     problem:
-      'Mengatasi latensi pelaporan status kiriman antarkota dari 30 menit menjadi instan dengan visualisasi posisi armada truk secara real-time.',
+      'Dashboard sentral telemetri pelacakan armada truk secara real-time berbasis Next.js, PostgreSQL/PostGIS, dan WebSocket untuk eliminasi latensi pelaporan status pengiriman antarkota.',
     stack: ['Next.js', 'React', 'Tailwind CSS', 'PostgreSQL', 'PostGIS', 'Supabase Realtime', 'Leaflet/Mapbox'],
     metrics: [
-      { label: 'Pelaporan Latensi', value: '< 3 Detik' },
+      { label: 'Telemetri Latensi', value: '< 3s' },
       { label: 'Penurunan Komplain', value: '42%' },
-      { label: 'Armada Terpantau', value: '200+ Truk' },
+      { label: 'Armada Terpantau', value: '200+ Unit' },
     ],
-    linkText: 'Lihat repositori terkait di GitHub',
-    linkUrl: 'https://github.com/Sadin21',
+    primaryBtnText: 'Buka Repositori GitHub',
+    primaryBtnUrl: 'https://github.com/Sadin21',
+    secondaryBtnText: 'Profil LinkedIn',
+    secondaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+  },
+  'project-payment': {
+    title: 'Integrasi Payment Virtual Account Multi-Bank (SNAP BI)',
+    category: 'FINTECH ENGINE • DIRECT CONNECTION',
+    badge: '5 Bank Go-Live',
+    callout: 'Koneksi langsung ke BCA, BNI, BRI, Mandiri, & DBS dengan 0% double-pay.',
+    problem:
+      'Migrasi pembayaran dari perantara agregator (Midtrans) ke direct connection 5 bank utama berbasis standar SNAP BI guna memangkas biaya perantara transaksi dan mempercepat rekonsiliasi.',
+    stack: ['Node.js', 'Next.js', 'PostgreSQL', 'Redis Idempotency', 'SNAP BI Specs', 'Payment Simulator'],
+    metrics: [
+      { label: 'Bank Terintegrasi', value: '5 Bank' },
+      { label: 'Double Payment', value: '0%' },
+      { label: 'Efisiensi Testing', value: '~60%' },
+    ],
+    primaryBtnText: 'Tanya Detail Arsitektur',
+    primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+    secondaryBtnText: 'GitHub Profil',
+    secondaryBtnUrl: 'https://github.com/Sadin21',
+  },
+  'project-monitoring-utility': {
+    title: 'Monitoring Utility Armada & Driver Matrix',
+    category: 'ERP MATRIX • OPERATION VISIBILITY',
+    badge: '31 Hari Matrix',
+    callout: 'Spreadsheet kalender interaktif dua arah terintegrasi database ERP.',
+    problem:
+      'Menggantikan proses manual Excel terpisah dengan antarmuka matriks dinamis yang menyinkronkan status asimetris Armada dan Driver serta otomatisasi agregasi metrik omset/margin harian.',
+    stack: ['Laravel', 'PHP', 'DataTables Dinamis', 'jQuery', 'MySQL / PostgreSQL', 'Excel Exporter'],
+    metrics: [
+      { label: 'Visibilitas Kalender', value: '31 Hari' },
+      { label: 'Sinkronisasi 2-Arah', value: '100%' },
+      { label: 'Template Tampilan', value: '4 Mode' },
+    ],
+    primaryBtnText: 'Tanya Solusi Teknis',
+    primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+    secondaryBtnText: 'GitHub Profil',
+    secondaryBtnUrl: 'https://github.com/Sadin21',
   },
 };
 
@@ -36,47 +80,52 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ slug }) => {
 
   if (!project) {
     return (
-      <div className="my-3 p-3 rounded-xl border border-slate-700 bg-slate-800/50 text-xs text-slate-400">
-        📌 Referensi Proyek: <span className="font-mono text-cyan-400">{slug}</span>
+      <div className="my-2 p-2.5 rounded-lg border border-[#2a3942] bg-[#111b21] text-xs text-[#8696a0]">
+        📌 Referensi Proyek: <span className="font-mono text-[#00a884]">{slug}</span>
       </div>
     );
   }
 
   return (
-    <div className="my-4 overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-5 shadow-xl shadow-cyan-950/20 backdrop-blur-md transition-all hover:border-cyan-400/50">
+    <div className="my-2.5 overflow-hidden rounded-lg border-l-4 border-[#00a884] bg-[#111b21] p-3.5 shadow-xs text-[#e9edef]">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-sm">
-            🚚
+      <div className="flex flex-wrap items-start justify-between gap-1.5 pb-1.5">
+        <div>
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#00a884]">
+            {project.category}
           </span>
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">
-              {project.category}
-            </span>
-            <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
-              {project.title}
-            </h4>
-          </div>
+          <h4 className="text-sm font-semibold text-[#e9edef] mt-0.5">
+            {project.title}
+          </h4>
         </div>
+
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#202c33] text-[#25d366] border border-[#2a3942]">
+          {project.badge}
+        </span>
       </div>
 
-      {/* Description */}
-      <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+      {/* WhatsApp Quote Highlight */}
+      <div className="my-2 p-2 rounded bg-[#202c33]/80 text-xs text-[#8696a0]">
+        <span className="text-[#00a884] mr-1.5">⚡</span>
+        <span className="text-[#e9edef]">{project.callout}</span>
+      </div>
+
+      {/* Problem */}
+      <p className="text-xs text-[#8696a0] leading-relaxed">
         {project.problem}
       </p>
 
       {/* Metrics Badges */}
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="mt-3 grid grid-cols-3 gap-2">
         {project.metrics.map((metric, i) => (
           <div
             key={i}
-            className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-2.5 text-center"
+            className="rounded bg-[#202c33] p-1.5 text-center border border-[#2a3942]/60"
           >
-            <div className="text-base sm:text-lg font-extrabold text-cyan-300 font-mono tracking-tight">
+            <div className="text-xs sm:text-sm font-bold text-[#00a884] font-mono">
               {metric.value}
             </div>
-            <div className="text-[10px] sm:text-xs text-slate-400 font-medium mt-0.5">
+            <div className="text-[10px] text-[#8696a0] mt-0.5">
               {metric.label}
             </div>
           </div>
@@ -84,41 +133,43 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ slug }) => {
       </div>
 
       {/* Tech Stack Pills */}
-      <div className="mt-4 flex flex-wrap items-center gap-1.5 pt-3 border-t border-slate-800/60">
-        <span className="text-[10px] uppercase font-semibold tracking-wider text-slate-500 mr-1">
+      <div className="mt-2.5 flex flex-wrap items-center gap-1 pt-2 border-t border-[#222d34]">
+        <span className="text-[10px] uppercase font-semibold text-[#8696a0] mr-1">
           Stack:
         </span>
         {project.stack.map((tech, idx) => (
           <span
             key={idx}
-            className="rounded-md border border-slate-700/60 bg-slate-800/60 px-2 py-0.5 text-[11px] font-medium text-slate-300"
+            className="rounded bg-[#202c33] px-1.5 py-0.5 text-[10px] font-medium text-[#8696a0] border border-[#2a3942]/50"
           >
             {tech}
           </span>
         ))}
       </div>
 
-      {/* External Link */}
-      {project.linkUrl && (
-        <div className="mt-4 pt-2">
+      {/* Action Buttons */}
+      <div className="mt-3 flex items-center gap-2">
+        <a
+          href={project.primaryBtnUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded bg-[#00a884] hover:bg-[#008f6f] px-3 py-1.5 text-xs font-semibold text-[#111b21] transition-colors"
+        >
+          {project.primaryBtnText}
+          <span>→</span>
+        </a>
+
+        {project.secondaryBtnText && (
           <a
-            href={project.linkUrl}
+            href={project.secondaryBtnUrl || '#'}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group"
+            className="text-xs text-[#53bdeb] hover:underline px-2 py-1"
           >
-            {project.linkText || 'Buka Link Terkait'}
-            <svg
-              className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            {project.secondaryBtnText}
           </a>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
