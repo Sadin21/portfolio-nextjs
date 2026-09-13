@@ -17,11 +17,11 @@ interface ChunkData {
 }
 
 // Ensure required environment variables are set
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const EMBEDDING_KEY = process.env.EMBEDDING_API_KEY || process.env.LLM_API_KEY || process.env.GEMINI_API_KEY;
 const DATABASE_URL = process.env.DATABASE_URL;
 
-if (!GEMINI_API_KEY) {
-  console.error('❌ Error: GEMINI_API_KEY is not defined in .env.local');
+if (!EMBEDDING_KEY) {
+  console.error('❌ Error: EMBEDDING_API_KEY (or LLM_API_KEY/GEMINI_API_KEY) is not defined in .env.local');
   process.exit(1);
 }
 
@@ -31,7 +31,7 @@ if (!DATABASE_URL) {
 }
 
 // Initialize Gemini SDK & Postgres Pool
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(EMBEDDING_KEY);
 const embeddingModel = genAI.getGenerativeModel({ model: 'gemini-embedding-001' });
 const pool = new Pool({ connectionString: DATABASE_URL });
 

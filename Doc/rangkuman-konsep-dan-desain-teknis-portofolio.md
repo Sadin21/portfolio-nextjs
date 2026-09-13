@@ -314,7 +314,7 @@ Dua "dunia" di Next.js:
 **File `.env.local` (di root project, otomatis di-ignore Git):**
 ```bash
 # SERVER-SIDE ONLY — aman, tidak exposed ke browser
-GEMINI_API_KEY=xxxxx
+LLM_API_KEY=xxxxx
 SUPABASE_SERVICE_ROLE_KEY=xxxxx
 ADMIN_SECRET_KEY=xxxxx
 
