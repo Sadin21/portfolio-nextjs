@@ -1,24 +1,29 @@
 ## Skills: Technical Stack & Capabilities
 
-### Frontend Engineering
-- Framework: Next.js (App Router, Server Components), React, TypeScript.
-- State & Data Fetching: React Query (TanStack Query), Zustand, Context API.
-- UI & Styling: Tailwind CSS, Shadcn UI, Radix UI primitives.
-- Testing & Performa: Vitest, React Testing Library, optimasi Core Web Vitals (LCP, FID/INP, CLS).
+### Backend & Database Engineering
+- Framework & Runtime: NestJS (TypeScript), Laravel (PHP), Node.js.
+- Database: MySQL, PostgreSQL, Supabase.
+- Teknik Database & Konkurensi: Transaksi atomik (ACID), penguncian baris data (*pessimistic locking*) untuk mencegah *race condition*, penanganan sinkronisasi data memori, dan pendekatan *hybrid query* untuk pengolahan data performa tinggi.
+- Arsitektur & Desain API: Service Layer Pattern, RESTful API, arsitektur *state machine* untuk alur pesanan kompleks, dan sistem pembersihan data bersih (*clean multi-entity teardown*).
 
-### Backend Engineering & Database
-- Runtime & Framework: Node.js, Express, Next.js Route Handlers.
-- Database: PostgreSQL, Supabase, Redis (caching & rate-limiting).
-- Database Techniques: Schema design, indexing (B-Tree, IVFFlat), SQL RPC, pgvector untuk vector retrieval.
-- API Design: RESTful API, Server-Sent Events (SSE) untuk streaming response, WebSocket.
+### Fintech, Security, & Integrasi Sistem
+- Standar Perbankan: Integrasi koneksi langsung (*direct connection*) berbasis standar nasional SNAP BI dari Bank Indonesia untuk 5 bank mitra (BCA, BNI, BRI, Mandiri, DBS).
+- Mekanisme Idempotency: Pencegahan transaksi ganda (*zero double-pay*) pada mutasi pembayaran menggunakan validasi kunci transaksi unik di database.
+- Kriptografi & Keamanan API: Tanda tangan digital asimetris (SHA256withRSA), tanda tangan simetris (HMAC-SHA512), enkripsi data PGP (GnuPG), serta validasi timestamp pencegah serangan *replay attack*.
+- Autentikasi & Otorisasi: Manajemen siklus token OAuth 2.0 B2B dengan scheduler otomatis, pembatasan akses IP resmi (*IP whitelisting*), dan pencatatan audit log transaksi.
+
+### Frontend & Antarmuka Interaktif
+- Modern Web: Next.js (App Router, Server Components), React, TypeScript.
+- Styling & Desain: Tailwind CSS, Bootstrap, CSS responsif.
+- Spreadsheet & Matriks Dinamis: Pembuatan tabel matriks kalender interaktif dengan DataTables, pembuat struktur tabel dinamis, edit data langsung di tabel (*inline cell editing* dengan jQuery), dan kalkulasi posisi menu melayang.
+- Ekspor Laporan Sisi Klien: Pembuatan laporan Excel terformat otomatis (pemisah ribuan, border tabel, dan formula total) langsung di browser menggunakan SheetJS tanpa membebani server backend.
 
 ### AI Engineering & RAG Tools
-- LLM Integration: Google Gemini API (Gemini Flash), Vercel AI SDK (`ai`, `@ai-sdk/google`).
-- Embeddings: `gemini-embedding-001` (768 dimensi menggunakan MRL).
-- Vector Search: Supabase pgvector dengan cosine similarity thresholding.
-- Pipeline: Idempotent data indexing script, section chunking regex, prompt engineering guardrails.
+- Integrasi LLM: Google Gemini API, Vercel AI SDK.
+- Vector Search & Embeddings: Gemini Embedding Model (`gemini-embedding-001`), Supabase pgvector dengan pencarian *cosine similarity*.
+- Pipeline RAG: Skrip indexing data otomatis, *semantic chunking* berbasis bagian dokumen, dan perancangan instruksi prompt dengan batasan keamanan (*guardrails*).
 
-### DevOps & Tools
-- Containerization: Docker, Docker Compose, multi-stage Docker builds.
-- Deployment: Vercel, Supabase Cloud, GitHub Actions CI/CD.
-- Version Control & Workflows: Git, Trunk-based development, Semantic Versioning.
+### Tools, Workflow & Kolaborasi
+- Version Control & Branching: Git, strategi rilis bertahap (*versioned release branching*) dan isolasi *sandbox* untuk pengujian integrasi multi-pihak secara independen.
+- Containerization & Deployment: Docker, Docker Compose, Vercel, Supabase Cloud.
+- Kolaborasi & Pengujian: Komunikasi dan penyelarasan teknis lintas tim (developer internal, tim operasional, hingga tim teknis perbankan) serta pengawalan uji sertifikasi UAT ke production.
