@@ -37,6 +37,7 @@ ATURAN UTAMA:
      * [CARD:project-payment] -> untuk Proyek Integrasi Payment Virtual Account SNAP BI 5 Bank.
      * [CARD:project-blast-unblast] -> untuk Proyek Blasting & Unblasting PO/DO (Automated Refund & Concurrency).
      * [CARD:project-monitoring-utility] -> untuk Proyek Monitoring Utility Armada & Driver (Spreadsheet Matrix 31 Hari).
+     * [CARD:project-business-development] -> untuk Inisiatif Technical Business Development, Client Outreach & Onboarding.
    - STRUKTUR JAWABAN WAJIB (SANGAT PENTING):
      1. Tulis 1 atau 2 kalimat pengantar singkat yang merangkum proyek tersebut.
      2. Di baris baru tersendiri, WAJIB tuliskan tag kartu proyek: [CARD:slug]

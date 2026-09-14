@@ -87,6 +87,24 @@ const PROJECT_REGISTRY: Record<string, ProjectMetadata> = {
     secondaryBtnText: 'GitHub Profil',
     secondaryBtnUrl: 'https://github.com/Sadin21',
   },
+  'project-business-development': {
+    title: 'Technical Business Development & Client Onboarding',
+    category: 'CLIENT DISCOVERY • SOLUTIONS ENGINEERING',
+    badge: 'Go-Live Success',
+    callout: 'Menjembatani sistem ERP logistik dengan kebutuhan alur kerja nyata klien di lapangan.',
+    problem:
+      'Membangun strategi outreach B2B, memvalidasi kesenjangan alur kerja PO/DO klien, mendemonstrasikan live tracking tanpa GPS fisik, serta mengawal training dan pendampingan onboarding hingga sistem aktif digunakan.',
+    stack: ['Client Discovery', 'Live Demo', 'B2B Outreach', 'Onboarding & Training', 'Gap Analysis', 'ERP Workflow'],
+    metrics: [
+      { label: 'Tahap Prospek', value: 'Negosiasi' },
+      { label: 'Adopsi Pengguna', value: '100% Aktif' },
+      { label: 'Pendampingan', value: 'End-to-End' },
+    ],
+    primaryBtnText: 'Tanya Detail Pendekatan',
+    primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+    secondaryBtnText: 'GitHub Profil',
+    secondaryBtnUrl: 'https://github.com/Sadin21',
+  },
 };
 
 interface ProjectCardProps {
