@@ -305,6 +305,27 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error('Chat API Error:', error);
+
+    const errMsg = (error?.message || '').toLowerCase();
+    const isTokenOrQuotaExhausted =
+      errMsg.includes('429') ||
+      errMsg.includes('quota') ||
+      errMsg.includes('resource_exhausted') ||
+      errMsg.includes('rate limit') ||
+      errMsg.includes('rate_limit') ||
+      errMsg.includes('insufficient_quota') ||
+      errMsg.includes('credit') ||
+      errMsg.includes('token') ||
+      error?.status === 429;
+
+    if (isTokenOrQuotaExhausted) {
+      return createErrorResponse(
+        'Mohon maaf, kuota token AI harian untuk portofolio ini saat ini sedang mencapai batas. Kamu tetap bisa menghubungi Daffa secara langsung melalui LinkedIn atau Email untuk berdiskusi lebih lanjut.',
+        'TOKEN_QUOTA_EXHAUSTED',
+        429
+      );
+    }
+
     return createErrorResponse(
       'Terjadi kesalahan internal pada server AI. Silakan coba beberapa saat lagi.',
       'INTERNAL_SERVER_ERROR',

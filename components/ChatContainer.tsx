@@ -225,18 +225,67 @@ export const ChatContainer: React.FC = () => {
           </div>
         )}
 
-        {/* Error Notification */}
-        {error && (
-          <div className="my-2 p-3 rounded-lg bg-[#382023] border border-[#4a262a] text-[#f15c6d] text-xs flex items-center justify-between gap-3">
-            <span>⚠️ {error.message || 'Gagal menghubungi server AI.'}</span>
-            <button
-              onClick={() => handleSend(input || 'Halo')}
-              className="px-2.5 py-1 rounded bg-[#4a262a] hover:bg-[#5e3136] text-white text-xs font-medium transition-colors"
-            >
-              Coba lagi
-            </button>
-          </div>
-        )}
+        {/* Error / Quota Exhausted Notification */}
+        {error && (() => {
+          let errorMsg = error.message || 'Gagal memproses permintaan.';
+          try {
+            const parsed = JSON.parse(error.message);
+            if (parsed?.error?.message) errorMsg = parsed.error.message;
+            else if (parsed?.message) errorMsg = parsed.message;
+          } catch {
+            // Non-JSON error message
+          }
+
+          const isQuota =
+            errorMsg.toLowerCase().includes('kuota') ||
+            errorMsg.toLowerCase().includes('token') ||
+            errorMsg.toLowerCase().includes('quota') ||
+            errorMsg.toLowerCase().includes('429') ||
+            errorMsg.toLowerCase().includes('resource_exhausted') ||
+            errorMsg.toLowerCase().includes('rate');
+
+          return (
+            <div className="my-2.5 p-3.5 rounded-lg bg-[#182229] border border-[#ffd279]/30 text-[#e9edef] text-xs shadow-xs space-y-2.5">
+              <div className="flex items-start gap-2.5 text-[#ffd279]">
+                <span className="text-base leading-none mt-0.5">⚠️</span>
+                <div className="flex-1">
+                  <p className="font-semibold text-xs text-[#ffd279]">
+                    {isQuota
+                      ? 'Mohon Maaf, Kuota Token AI Sedang Habis'
+                      : 'Gagal Menghubungi Server AI'}
+                  </p>
+                  <p className="text-[11px] text-[#8696a0] mt-1 leading-relaxed">
+                    {errorMsg}
+                  </p>
+                </div>
+              </div>
+
+              {/* Direct Fallback Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#222d34]">
+                <a
+                  href="https://www.linkedin.com/in/muhammad-daffa-asaddin/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00a884] hover:bg-[#008f6f] text-[#111b21] font-semibold text-[11px] transition-colors"
+                >
+                  <span>💼</span> Hubungi via LinkedIn
+                </a>
+                <a
+                  href="mailto:emdeasaddin21@gmail.com"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#202c33] hover:bg-[#2a3942] text-[#53bdeb] font-medium text-[11px] border border-[#2a3942] transition-colors"
+                >
+                  <span>✉️</span> Kirim Email
+                </a>
+                <button
+                  onClick={() => handleSend(input || 'Halo')}
+                  className="ml-auto text-[11px] text-[#8696a0] hover:text-[#e9edef] underline cursor-pointer"
+                >
+                  Coba lagi
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         <div ref={messagesEndRef} />
       </main>
