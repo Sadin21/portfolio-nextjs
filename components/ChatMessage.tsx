@@ -95,10 +95,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     });
   };
 
-  // Helper to format inline bold, code, links, mentions
+  // Helper to format inline bold, italic, code, links, mentions
   const formatInlineTokens = (line: string): React.ReactNode => {
-    // Regex for bold, code, links, mentions (@Name)
-    const tokenRegex = /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\)|\[https?:\/\/[^\]]+\]|@[a-zA-Z0-9_~-]+)/g;
+    // Regex for bold (**text**), italic (*text* or _text_), code, links, mentions (@Name)
+    const tokenRegex = /(\*\*[^*]+\*\*|\*[^*]+\*|_[^_]+_|`[^`]+`|\[[^\]]+\]\([^)]+\)|\[https?:\/\/[^\]]+\]|@[a-zA-Z0-9_~-]+)/g;
     const segments = line.split(tokenRegex);
 
     return segments.map((seg, idx) => {
@@ -114,11 +114,24 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
       }
 
       // Bold text **text**
-      if (seg.startsWith('**') && seg.endsWith('**')) {
+      if (seg.startsWith('**') && seg.endsWith('**') && seg.length > 4) {
         return (
           <strong key={idx} className="font-semibold text-white">
             {seg.slice(2, -2)}
           </strong>
+        );
+      }
+
+      // Italic text *text* or _text_ (for foreign/technical terms)
+      if (
+        ((seg.startsWith('*') && seg.endsWith('*')) ||
+          (seg.startsWith('_') && seg.endsWith('_'))) &&
+        seg.length > 2
+      ) {
+        return (
+          <em key={idx} className="italic text-[#e9edef]">
+            {seg.slice(1, -1)}
+          </em>
         );
       }
 
@@ -219,7 +232,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
         {/* Bottom-right Timestamp & Checkmarks */}
         <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-[#8696a0] select-none">
-          <span>{currentTime}</span>
+          <span suppressHydrationWarning>{currentTime}</span>
           {isUser && (
             <span className="text-[#53bdeb] text-xs leading-none font-bold" title="Read">
               ✓✓

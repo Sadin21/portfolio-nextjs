@@ -40,11 +40,11 @@ const PROJECT_REGISTRY: Record<string, ProjectMetadata> = {
     callout: 'Koneksi langsung ke BCA, BNI, BRI, Mandiri, & DBS dengan 0% double-pay.',
     problem:
       'Migrasi pembayaran dari perantara agregator (Midtrans) ke direct connection 5 bank utama berbasis standar SNAP BI guna memangkas biaya perantara transaksi dan mempercepat rekonsiliasi.',
-    stack: ['Node.js', 'Next.js', 'PostgreSQL', 'Redis Idempotency', 'SNAP BI Specs', 'Payment Simulator'],
+    stack: ['Laravel', 'PHP', 'MySQL', 'SNAP BI', 'RSA-SHA256', 'HMAC-SHA512', 'GnuPG'],
     metrics: [
       { label: 'Bank Terintegrasi', value: '5 Bank' },
       { label: 'Double Payment', value: '0%' },
-      { label: 'Efisiensi Testing', value: '~60%' },
+      { label: 'Direct Settlement', value: '100%' },
     ],
     primaryBtnText: 'Tanya Detail Arsitektur',
     primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
@@ -58,13 +58,31 @@ const PROJECT_REGISTRY: Record<string, ProjectMetadata> = {
     callout: 'Spreadsheet kalender interaktif dua arah terintegrasi database ERP.',
     problem:
       'Menggantikan proses manual Excel terpisah dengan antarmuka matriks dinamis yang menyinkronkan status asimetris Armada dan Driver serta otomatisasi agregasi metrik omset/margin harian.',
-    stack: ['Laravel', 'PHP', 'DataTables Dinamis', 'jQuery', 'MySQL / PostgreSQL', 'Excel Exporter'],
+    stack: ['Laravel', 'PHP', 'MySQL', 'DataTables', 'SheetJS', 'Bootstrap', 'jQuery'],
     metrics: [
       { label: 'Visibilitas Kalender', value: '31 Hari' },
       { label: 'Sinkronisasi 2-Arah', value: '100%' },
       { label: 'Template Tampilan', value: '4 Mode' },
     ],
     primaryBtnText: 'Tanya Solusi Teknis',
+    primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+    secondaryBtnText: 'GitHub Profil',
+    secondaryBtnUrl: 'https://github.com/Sadin21',
+  },
+  'project-blast-unblast': {
+    title: 'Blasting & Unblasting PO/DO (Automated Refund Engine)',
+    category: 'ORDER ALLOCATION • LEDGER CONSISTENCY',
+    badge: 'Zero Stale Overwrite',
+    callout: 'Automated refund & pessimistic locking untuk eliminasi race condition saldo.',
+    problem:
+      'Alur distribusi muatan (Blasting) dan pembatalan alokasi armada (Unblasting) dengan multi-tier guard safety serta pembersihan bersih 5 entitas logistik secara atomik.',
+    stack: ['NestJS', 'TypeScript', 'Laravel', 'MySQL', 'Pessimistic Locking', 'State Machine'],
+    metrics: [
+      { label: 'Integritas Saldo', value: '100%' },
+      { label: 'Rollback Entitas', value: '5 Modul' },
+      { label: 'Accidental Unblast', value: '0 Error' },
+    ],
+    primaryBtnText: 'Tanya Detail Solusi',
     primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
     secondaryBtnText: 'GitHub Profil',
     secondaryBtnUrl: 'https://github.com/Sadin21',
