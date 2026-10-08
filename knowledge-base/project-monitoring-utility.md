@@ -1,38 +1,40 @@
 ## Project: Monitoring Utility Armada & Driver
-
+ 
 ### Konteks & Masalah Bisnis
-Tim operasional armada membutuhkan visibilitas yang jelas untuk menyusun jadwal kerja beberapa hari ke depan sekaligus memantau riwayat aktivitas armada dan driver. Sebelumnya, proses ini dicatat secara manual di file Excel terpisah, sehingga tim operasional harus bekerja dua kali dan data sering kali tidak cocok dengan sistem ERP (*human error*). Untuk mengatasi inefisiensi ini, kami mengembangkan fitur **Monitoring Utility** berupa spreadsheet matriks interaktif yang terhubung langsung ke database ERP. Sistem ini memetakan aktivitas harian secara real-time—mulai dari status penugasan armada, progres Surat Jalan (DO), sinkronisasi status dua arah Armada-Driver, hingga kalkulasi otomatis metrik keuangan (omset, sangu, dan margin) yang bisa diekspor langsung ke Excel.
+- Latar Belakang: Kebutuhan tim operasional untuk memantau histori aktivitas dan merencanakan jadwal kerja armada dan driver hingga 31 hari ke depan.
+- Masalah: Pencatatan manual di file Excel terpisah memicu kerja ganda (*double-entry*), ketidaksesuaian data dengan database ERP (*human error*), dan lambatnya rekap metrik finansial.
+- Solusi: Spreadsheet matriks kalender interaktif terintegrasi langsung ke database ERP, mendukung pemantauan real-time status armada/driver dan kalkulasi otomatis metrik finansial.
 
 ### Solusi Arsitektur & Tech Stack
-Membangun spreadsheet matriks interaktif dua arah yang terhubung langsung ke database ERP:
 - Backend: Laravel (PHP).
-- Database & Query: MySQL, menggunakan pendekatan *hybrid query* (kombinasi query database dan pemrosesan data di memori server) agar data transaksi pengiriman dapat diubah menjadi struktur kalender matriks 31 hari dengan cepat.
-- Frontend & Antarmuka: DataTables dengan generator antarmuka dinamis untuk menghasilkan susunan header dan footer tabel bertingkat, jQuery untuk interaksi edit sel langsung di tabel (*inline editing*), Bootstrap, dan styling CSS kustom.
-- Ekspor Laporan di Browser: Menggunakan integrasi DataTables dan SheetJS untuk mencetak laporan Excel siap pakai (lengkap dengan format pemisah ribuan, garis tabel, dan rumus kalkulasi total) langsung dari browser pengguna tanpa membebani server.
+- Database & Query: MySQL dengan pendekatan *hybrid query* (kombinasi query terindeks dan pemrosesan array di memori) untuk transformasi cepat data event transaksi ke matriks kalender 31 hari.
+- Frontend & UI: DataTables dengan dynamic header/footer generator, jQuery untuk *inline editing*, Bootstrap, dan CSS responsif.
+- Ekspor Laporan: SheetJS di sisi klien untuk unduh file Excel terformat (formula total, pemisah ribuan, border) langsung dari browser tanpa membebani server backend.
 
 ### Peran & Kontribusi Utama
-Sebagai Full Stack Developer, saya bertanggung jawab penuh atas perancangan arsitektur dan pembuatan fitur Monitoring Utility secara end-to-end. Di sisi backend, saya merancang API Laravel untuk mengolah log aktivitas harian, status utilisasi, dan perhitungan metrik keuangan. Di sisi frontend, saya mengembangkan antarmuka spreadsheet interaktif menggunakan DataTables dan jQuery yang mendukung edit data langsung di tabel (*inline editing*), 4 mode tampilan, serta ekspor file Excel instan.
+- Merancang dan membangun fitur Monitoring Utility end-to-end: API pengolahan log aktivitas Laravel, agregasi metrik finansial, dan UI spreadsheet matriks dinamis.
+- Mengimplementasikan 4 mode template tampilan, *inline cell editing*, dan kalkulasi performa armada/driver secara instan.
 
 ### Tantangan Teknis: Transformasi Data Transaksional ke Matriks 2D (Slot Kosong)
-- Problem: Data pengiriman di database tersimpan per riwayat kejadian transaksi, sedangkan antarmuka membutuhkan tampilan kalender horizontal utuh selama 31 hari penuh, termasuk harus menampilkan tanggal-tanggal yang tidak ada aktivitas sama sekali.
-- Solusi: Saya menyusun ulang struktur data di memori server menggunakan pemetaan berbasis indeks agar pencarian data berlangsung instan tanpa proses perulangan yang membebani kinerja server. Tanggal yang tidak memiliki jadwal aktivitas otomatis diisi dengan sel kosong agar susunan kalender tetap rapi dan berurutan.
+- Problem: Data database tersimpan per event transaksi, sedangkan tampilan UI memerlukan grid horizontal 31 hari utuh termasuk tanggal-tanggal tanpa aktivitas logistik.
+- Solusi: Penyusunan ulang struktur data berbasis indeks di memori server dan pengisian sel kosong otomatis untuk memangkas iterasi pencarian data di frontend.
 
 ### Tantangan Teknis: Spreadsheet Matriks Dinamis pada DataTables
-- Problem: Komponen tabel bawaan umumnya dirancang untuk susunan kolom yang statis, sehingga kerap rusak saat harus menampilkan struktur header bertingkat dengan sel gabungan yang jumlah kolom per tanggalnya berubah drastis sesuai template yang dipilih pengguna.
-- Solusi: Saya membangun fungsi pembuat struktur tabel dinamis yang merender ulang baris header dan ringkasan footer secara otomatis dari data JavaScript, lalu menerapkan alur reset dan pemasangan ulang tabel secara terprogram setiap kali pengguna berpindah mode tampilan.
+- Problem: Header bertingkat dan sel gabungan DataTables rentan rusak ketika susunan kolom berubah dinamis saat pengguna berpindah template tampilan.
+- Solusi: Generator struktur tabel berbasis JavaScript yang merender ulang elemen header/footer dan menginisialisasi ulang DataTables secara terprogram pada setiap pergantian template.
 
 ### Tantangan Teknis: Sinkronisasi Status Asimetris (Armada ↔ Driver)
-- Problem: Satu unit truk dapat berganti pengemudi di hari yang berbeda, sedangkan seorang pengemudi hanya dapat terikat pada satu truk dalam satu waktu. Perubahan status pada salah satu pihak rentan menimbulkan ketidaksesuaian catatan operasional jika tidak diselaraskan.
-- Solusi: Saya menerapkan pemetaan relasi dua arah dengan pembaruan berantai otomatis (*cascading update*), sehingga ketika armada disetel ke status pasif (seperti sedang parkir, servis, atau libur), status pengemudi yang bertugas otomatis ikut tersinkronisasi tanpa perlu diedit manual satu per satu.
+- Problem: Truk dapat berganti pengemudi harian, namun satu driver hanya terikat pada satu truk pada satu waktu; rentan terjadi konflik status operasional.
+- Solusi: Relasi dua arah dengan pembaruan berantai (*cascading update*)—status driver otomatis tersinkronisasi saat status armada diubah menjadi pasif (servis, parkir, libur).
 
 ### Tantangan Teknis: Tampilan Menu Aksi Terpotong pada Tabel Lebar
-- Problem: Penggunaan kolom terkunci (*fixed column*) dan area geser horizontal membuat menu pilihan status terpotong (*clipped*) oleh batas bingkai tabel yang membatasi tampilan visual elemen di dalamnya.
-- Solusi: Saya merekayasa mekanisme pembukaan menu dengan memindahkan elemen dropdown ke lapisan terluar halaman web saat diklik, lalu menghitung koordinat titik layar sel yang dipilih secara presisi agar menu tetap melayang pas di atas sel tanpa terpotong batas tabel.
+- Problem: Fitur *fixed column* dan horizontal scrolling menyebabkan dropdown aksi sel terpotong batas container (`overflow: hidden`).
+- Solusi: Memindahkan elemen dropdown ke root DOM saat dibuka dan mengalkulasi koordinat posisi layar sel secara presisi agar menu melayang rapi di atas tabel.
 
 ### Hasil & Dampak (Impact)
-- 31 Hari Visibilitas Kalender: Memungkinkan tim operasional memantau status utilitas dan jadwal armada hingga 31 hari berturut-turut dalam satu layar tanpa perlu berpindah halaman.
-- 100% Sinkronisasi Armada & Driver: Menyatukan perspektif armada dan driver dalam satu sistem terpadu dengan pembaruan status otomatis.
-- 4 Mode Template Tampilan: Menyediakan 4 pilihan tampilan (Lengkap, Status, Aktivitas, dan Ringkasan Finansial) yang memangkas waktu analisis data dari hitungan jam menjadi hitungan menit.
-- Tracking Otomatis 3 Metrik Finansial: Menghitung omset, sangu, dan margin bersih harian secara otomatis per armada dan pengemudi secara real-time.
-- Ekspor Excel Instan di Sisi Klien: Menghasilkan laporan Excel siap pakai dengan format lengkap (pemisah ribuan, border tabel, dan rumus footer) langsung dari browser pengguna tanpa membebani server backend.
+- 31 Hari Visibilitas Kalender: Memantau jadwal dan utilitas armada sebulan penuh dalam satu layar tanpa reload.
+- 100% Sinkronisasi Armada-Driver: Menghilangkan inkonsistensi jadwal kerja antara kendaraan dan pengemudi.
+- 4 Mode Template: Pilihan tampilan fleksibel (Lengkap, Status, Aktivitas, Finansial) memangkas waktu analisis dari jam ke menit.
+- Tracking Otomatis 3 Metrik Finansial: Perhitungan otomatis omset, sangu, dan margin bersih harian per unit armada.
+- Zero Server Load Export: Ekspor Excel terformat lengkap diproses langsung di browser klien via SheetJS.
 [CARD:project-monitoring-utility]

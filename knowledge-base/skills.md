@@ -13,17 +13,10 @@
 - Autentikasi & Otorisasi: Manajemen siklus token OAuth 2.0 B2B dengan scheduler otomatis, pembatasan akses IP resmi (*IP whitelisting*), dan pencatatan audit log transaksi.
 
 ### Frontend & Antarmuka Interaktif
-- Modern Web: Next.js (App Router, Server Components), React, TypeScript.
 - Styling & Desain: Tailwind CSS, Bootstrap, CSS responsif.
 - Spreadsheet & Matriks Dinamis: Pembuatan tabel matriks kalender interaktif dengan DataTables, pembuat struktur tabel dinamis, edit data langsung di tabel (*inline cell editing* dengan jQuery), dan kalkulasi posisi menu melayang.
 - Ekspor Laporan Sisi Klien: Pembuatan laporan Excel terformat otomatis (pemisah ribuan, border tabel, dan formula total) langsung di browser menggunakan SheetJS tanpa membebani server backend.
 
-### AI Engineering & RAG Tools
-- Integrasi LLM: Google Gemini API, Vercel AI SDK.
-- Vector Search & Embeddings: Gemini Embedding Model (`gemini-embedding-001`), Supabase pgvector dengan pencarian *cosine similarity*.
-- Pipeline RAG: Skrip indexing data otomatis, *semantic chunking* berbasis bagian dokumen, dan perancangan instruksi prompt dengan batasan keamanan (*guardrails*).
-
 ### Tools, Workflow & Kolaborasi
 - Version Control & Branching: Git, strategi rilis bertahap (*versioned release branching*) dan isolasi *sandbox* untuk pengujian integrasi multi-pihak secara independen.
-- Containerization & Deployment: Docker, Docker Compose, Vercel, Supabase Cloud.
 - Kolaborasi & Pengujian: Komunikasi dan penyelarasan teknis lintas tim (developer internal, tim operasional, hingga tim teknis perbankan) serta pengawalan uji sertifikasi UAT ke production.
