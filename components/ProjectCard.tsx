@@ -105,6 +105,24 @@ const PROJECT_REGISTRY: Record<string, ProjectMetadata> = {
     secondaryBtnText: 'GitHub Profil',
     secondaryBtnUrl: 'https://github.com/Sadin21',
   },
+  'project-po-pack-koli': {
+    title: 'R&D & Modul PO/DO Multi-Item (Pack/Koli Furnitur)',
+    category: 'ERP CUSTOMIZATION • SUPPLY CHAIN DIGITIZATION',
+    badge: 'Multi-Item Engine',
+    callout: 'Adaptasi skema multi-SKU pack/koli terisolasi dengan modul validasi muatan fisik.',
+    problem:
+      'Mengembangkan arsitektur multi-item pack/koli untuk klien manufaktur furnitur dengan pendekatan scope bounding (zero breaking changes) dan sistem validasi muat & bongkar dua tahap.',
+    stack: ['Laravel', 'PHP', 'MySQL', 'DataTables', 'jQuery', 'Bootstrap', 'RBAC'],
+    metrics: [
+      { label: 'Akurasi Muatan', value: '100%' },
+      { label: 'Sengketa Selisih', value: '0 Kasus' },
+      { label: 'Adopsi Divisi', value: '5 Tim' },
+    ],
+    primaryBtnText: 'Tanya Detail Solusi',
+    primaryBtnUrl: 'https://www.linkedin.com/in/muhammad-daffa-asaddin/',
+    secondaryBtnText: 'GitHub Profil',
+    secondaryBtnUrl: 'https://github.com/Sadin21',
+  },
 };
 
 interface ProjectCardProps {

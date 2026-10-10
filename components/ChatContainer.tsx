@@ -67,8 +67,8 @@ export const ChatContainer: React.FC = () => {
   return (
     <div className="flex flex-col h-[100dvh] max-w-5xl mx-auto border-x border-[#222d34]/60 bg-[#0b141a]/95 backdrop-blur-xs relative">
       {/* WhatsApp Web Top Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 py-2.5 bg-[#202c33] border-b border-[#222d34] z-20">
-        <div className="flex items-center gap-3">
+      <header className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 bg-[#202c33] border-b border-[#222d34] z-20 gap-2">
+        <div className="flex items-center gap-3 shrink-0">
           {/* Avatar */}
           <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#00a884] text-white font-bold text-sm shadow-xs">
             DA
@@ -83,13 +83,43 @@ export const ChatContainer: React.FC = () => {
             <p className="text-[11px] text-[#8696a0] flex items-center gap-1.5">
               <span className="text-[#25d366]">online</span>
               <span>•</span>
-              <span>Fullstack Engineer (2 YOE)</span>
+              <span className="hidden sm:inline">Fullstack Engineer (2 YOE)</span>
+              <span className="sm:hidden">Engineer</span>
             </p>
           </div>
         </div>
 
+        {/* Center Download Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Unduh CV */}
+          <a
+            href="/Muhammad%20Daffa%20Asaddin-resume-2026.pdf"
+            download="Muhammad Daffa Asaddin-resume-2026.pdf"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#00a884]/15 hover:bg-[#00a884]/25 text-[#00a884] border border-[#00a884]/40 transition-all shadow-xs active:scale-95 whitespace-nowrap"
+            title="Unduh CV Muhammad Daffa Asaddin (PDF)"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Unduh CV</span>
+          </a>
+
+          {/* Unduh Portofolio */}
+          <a
+            href="/Portofolio_Proyek_Daffa.docx"
+            download="Portofolio_Proyek_Daffa.docx"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#111b21] hover:bg-[#202c33] hover:border-[#53bdeb]/50 text-[#d1d7db] hover:text-white border border-[#2a3942] transition-all shadow-xs active:scale-95 whitespace-nowrap"
+            title="Unduh Portofolio Proyek Daffa (Word DOCX)"
+          >
+            <svg className="w-3.5 h-3.5 text-[#53bdeb]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Unduh Portofolio</span>
+          </a>
+        </div>
+
         {/* Right Header Action Controls */}
-        <div className="flex items-center gap-3 text-[#aebac1]">
+        <div className="flex items-center gap-2 sm:gap-3 text-[#aebac1] shrink-0">
           {/* New Chat / Reset */}
           <button
             onClick={handleReset}
@@ -115,13 +145,30 @@ export const ChatContainer: React.FC = () => {
 
             {/* Menu Popover */}
             {menuOpen && (
-              <div className="absolute right-0 top-11 w-60 rounded-xl border border-[#222d34] bg-[#233138] p-3 shadow-2xl z-50 animate-fadeIn text-[#e9edef] text-xs">
+              <div className="absolute right-0 top-11 w-64 rounded-xl border border-[#222d34] bg-[#233138] p-3 shadow-2xl z-50 animate-fadeIn text-[#e9edef] text-xs">
                 <div className="pb-2 mb-2 border-b border-[#374248]">
                   <p className="font-semibold text-sm text-[#e9edef]">Daffa Asaddin</p>
                   <p className="text-[11px] text-[#8696a0]">Fullstack Engineer (Digital Logistics)</p>
                 </div>
 
                 <div className="space-y-1">
+                  <a
+                    href="/Muhammad%20Daffa%20Asaddin-resume-2026.pdf"
+                    download="Muhammad Daffa Asaddin-resume-2026.pdf"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#182229] text-[#00a884] hover:text-[#25d366] transition-colors font-medium"
+                  >
+                    <span>📄</span> Unduh CV (PDF)
+                  </a>
+                  <a
+                    href="/Portofolio_Proyek_Daffa.docx"
+                    download="Portofolio_Proyek_Daffa.docx"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#182229] text-[#53bdeb] hover:text-[#70c7ed] transition-colors font-medium"
+                  >
+                    <span>📑</span> Unduh Portofolio (Word)
+                  </a>
+
+                  <div className="border-t border-[#374248] my-1" />
+
                   <a
                     href="https://www.linkedin.com/in/muhammad-daffa-asaddin/"
                     target="_blank"
